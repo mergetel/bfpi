@@ -70,7 +70,7 @@ function feed(entries, domain) {
   const base = `https://${domain}`;
   const recent = entries.slice(-FEED_SIZE).reverse();
   const items = recent.map((e) => {
-    const url = e.launchWeek ? base + e.launchWeek : `${base}/changelog#v${e.version}`;
+    const url = e.launchWeek ? `${base}/${e.launchWeek.replace(/^\//, '')}` : `${base}/changelog/#v${e.version}`;
     const html = `<p>${xml(e.notes)}</p>` + (e.launchWeek ? `<p><a href="${xml(url)}">Launch Week ${xml(e.version.split('.')[0])}</a></p>` : '');
     return `  <entry>
     <title>v${xml(e.version)}</title>
@@ -88,7 +88,7 @@ function feed(entries, domain) {
   <title>BFPI changelog</title>
   <subtitle>A parody changelog. Every release says the same thing.</subtitle>
   <link rel="self" type="application/atom+xml" href="${base}/changelog.xml"/>
-  <link rel="alternate" type="text/html" href="${base}/changelog"/>
+  <link rel="alternate" type="text/html" href="${base}/changelog/"/>
   <id>${uuid('feed')}</id>
   <updated>${stamp(recent[0].date)}</updated>
   <author><name>BFPI</name><uri>${base}/</uri></author>
@@ -120,8 +120,8 @@ function launchWeekPage(version, date) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Launch Week ${n} · BFPI</title>
 <meta name="description" content="Launch Week ${n}: five days, five announcements, one sentence. BFPI v${version}. A parody.">
-<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="../../changelog.xml">
+<link rel="stylesheet" href="../../assets/site.css">
 <style>
   .lw-hero { padding: 64px 0 36px; }
   .lw-num { font-size: clamp(90px, 22vw, 220px); font-weight: 900; line-height: .9; letter-spacing: -.06em; }
@@ -140,14 +140,14 @@ function launchWeekPage(version, date) {
     <div class="lw-num grad">LW${n}</div>
     <h1>Launch Week ${n}.</h1>
     <p class="lede">The biggest release in our history. Five days. Five announcements. We've been working on this one since yesterday.</p>
-    <a class="btn btn-primary" href="/changelog#v${version}">See it in the changelog</a>
+    <a class="btn btn-primary" href="../../changelog/#v${version}">See it in the changelog</a>
   </section>
   <section class="days" aria-label="This week's announcements">${cards}
   </section>
   <p class="fine" style="margin:28px 0 12px">Launch Week ${n} is a parody. The workflow that publishes this site wrote this page on its own, the same way it writes every release.</p>
 </main>
 <footer id="foot"></footer>
-<script src="/assets/site.js"></script>
+<script src="../../assets/site.js"></script>
 </body>
 </html>
 `;
@@ -185,7 +185,7 @@ const version = bump(last ? last.version : '0.0.0', kind);
 const entry = { version, date, kind, notes: SENTENCE };
 
 if (kind === 'major') {
-  const rel = `/launch-week/v${version.split('.')[0]}/`;
+  const rel = `launch-week/v${version.split('.')[0]}/`;
   const dir = path.join(ROOT, rel);
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, 'index.html'), launchWeekPage(version, date));
@@ -197,7 +197,7 @@ fs.writeFileSync(DATA, JSON.stringify(data, null, 2) + '\n');
 fs.writeFileSync(FEED, feed(data.entries, domain));
 
 const body = kind === 'major'
-  ? `${SENTENCE}\n\nThis is a major. It's Launch Week ${version.split('.')[0]}, and the page for it is at \`${entry.launchWeek}\`.\n\nThe daily release workflow opened this PR and merges it on its own.`
+  ? `${SENTENCE}\n\nThis is a major. It's Launch Week ${version.split('.')[0]}, and the page for it is at \`/${entry.launchWeek}\`.\n\nThe daily release workflow opened this PR and merges it on its own.`
   : `${SENTENCE}\n\nToday's bump is a ${kind}. The daily release workflow opened this PR and merges it on its own.`;
 if (process.env.RUNNER_TEMP) fs.writeFileSync(path.join(process.env.RUNNER_TEMP, 'release-body.md'), body + '\n');
 

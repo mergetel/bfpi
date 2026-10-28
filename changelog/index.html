@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Changelog · BFPI</title>
 <meta name="description" content="Every BFPI release, summarized by BFPI. Bug fixes and performance improvements, daily, forever. A parody.">
-<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="../changelog.xml">
+<link rel="stylesheet" href="../assets/site.css">
 <style>
   .top { padding: 56px 0 28px; }
   .feed { display: inline-flex; align-items: center; gap: 8px; }
@@ -35,25 +35,25 @@
     <p class="kicker">Changelog</p>
     <h1>What's new in <span class="grad">BFPI.</span></h1>
     <p class="lede">We ship every day. Every release is summarized by our own product, because we believe in it.</p>
-    <a class="btn btn-sm feed" href="/changelog.xml"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="3" cy="13" r="2" fill="#f08c00"/><path d="M1 7a8 8 0 0 1 8 8M1 2a13 13 0 0 1 13 13" fill="none" stroke="#f08c00" stroke-width="2.2"/></svg>Subscribe (Atom)</a>
+    <a class="btn btn-sm feed" href="../changelog.xml"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="3" cy="13" r="2" fill="#f08c00"/><path d="M1 7a8 8 0 0 1 8 8M1 2a13 13 0 0 1 13 13" fill="none" stroke="#f08c00" stroke-width="2.2"/></svg>Subscribe (Atom)</a>
   </section>
 
   <section style="margin-bottom:24px">
     <ol class="log" id="log" aria-live="polite"><li>Loading releases…</li></ol>
-    <noscript><p>The list needs JavaScript. The <a href="/changelog.xml">Atom feed</a> doesn't, and it says the same thing.</p></noscript>
+    <noscript><p>The list needs JavaScript. The <a href="../changelog.xml">Atom feed</a> doesn't, and it says the same thing.</p></noscript>
   </section>
 </main>
 
 <footer id="foot"></footer>
 
-<script src="/assets/site.js"></script>
+<script src="../assets/site.js"></script>
 <script>
 (() => {
   const list = document.getElementById('log');
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const day = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
 
-  fetch('/data/changelog.json', { cache: 'no-cache' })
+  fetch('../data/changelog.json', { cache: 'no-cache' })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
     .then((d) => {
       list.innerHTML = d.entries.slice().reverse().map((e) => `
@@ -64,7 +64,7 @@
             <time datetime="${esc(e.date)}">${day(e.date)}</time>
           </div>
           <p>${esc(e.notes)}</p>
-          ${e.launchWeek ? `<a class="lw" href="${esc(e.launchWeek)}">Read about Launch Week ${esc(e.version.split('.')[0])} →</a>` : ''}
+          ${e.launchWeek ? `<a class="lw" href="../${esc(e.launchWeek)}">Read about Launch Week ${esc(e.version.split('.')[0])} →</a>` : ''}
         </li>`).join('');
       if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
     })

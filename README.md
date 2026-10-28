@@ -16,13 +16,14 @@ It's a parody, and a satire site for [merge.tel](https://merge.tel), which write
 | `launch-week/vN/` | Written by the release script on every major |
 | `assets/site.js` | The domain constant, plus the nav and the "Why this exists" footer every page shares |
 | `scripts/release.mjs` | Cuts a release. No dependencies |
-| `.github/workflows/release.yml` | Runs the release every day and merges it |
+| `.github/workflows/release.yml` | Runs the release every day, merges it, then deploys |
+| `.github/workflows/pages.yml` | Publishes the site to GitHub Pages |
 
 There's no build step, no framework, no database and no `package.json`.
 
 ## Run it
 
-The pages use root paths (`/assets/site.css`) and fetch `data/changelog.json`, so opening a file straight from disk won't work. Serve the folder instead:
+The pages fetch `data/changelog.json`, which a browser won't do from a file opened straight off disk. Serve the folder instead:
 
 ```sh
 python3 -m http.server 8000
@@ -32,17 +33,27 @@ Then open http://localhost:8000.
 
 ## Deploy
 
-Create a Netlify site from this repo. `netlify.toml` already sets the publish directory to the repo root with no build command, serves `changelog.xml` as Atom, and 404s `/scripts/` and `/.github/`. Every merge to `main` deploys, so the daily release PR redeploys the site once a day.
+The site is on GitHub Pages at https://mergetel.github.io/bfpi/. In Settings, Pages, the source has to be "GitHub Actions". `pages.yml` then publishes on every push to `main`, and only the site files go up. `scripts/`, `.github/` and the README stay in the repo.
+
+The daily release deploys too. Its merge is made with the workflow's own token, and GitHub doesn't start other workflows from that, so `release.yml` calls `pages.yml` itself once the PR has merged.
+
+Every link is relative, and `assets/site.js` works out the site root from its own URL, so the same files work under `/bfpi/` now and at `/` once there's a custom domain. `404.html` is the exception, since Pages serves it at whatever path was missing. It works out the root from the hostname instead.
 
 ## Set the domain
 
-The domain lives in one place, the `window.SITE` line at the top of `assets/site.js`. The share card, the copyable post and the API snippet read it in the browser, and `scripts/release.mjs` reads the same line to write the feed. After changing it, rewrite the feed so its links follow:
+The address lives in one place, the `window.SITE` line at the top of `assets/site.js`. It's `mergetel.github.io/bfpi` until a domain is bought. The share card, the copyable post and the API snippet read it in the browser, and `scripts/release.mjs` reads the same line to write the feed.
+
+To move to a real domain:
+
+1. Point its DNS at GitHub Pages (an `ALIAS` or `A` records for an apex domain, a `CNAME` to `mergetel.github.io` for a subdomain).
+2. Enter it in Settings, Pages, Custom domain, and tick "Enforce HTTPS" once the certificate is issued.
+3. Change `window.SITE` to the bare domain, then rewrite the feed so its links follow:
 
 ```sh
 node scripts/release.mjs --feed-only
 ```
 
-Otherwise the next daily release does it anyway. Add the domain in Netlify under Domain management too.
+The next daily release would rewrite the feed anyway. No CNAME file is needed, because an Actions deploy takes the domain from the setting.
 
 ## The daily release
 
@@ -52,7 +63,7 @@ Otherwise the next daily release does it anyway. Add the domain in Netlify under
 - a minor on Mondays
 - a patch on every other day
 
-The script appends a "Bug fixes and performance improvements." entry to `data/changelog.json` and rewrites `changelog.xml`. The workflow then pushes a `release/vX.Y.Z` branch, opens a PR titled `vX.Y.Z`, and squash merges it. It tries auto-merge first and merges directly if the repo has auto-merge off. If today already has a release, it does nothing.
+The script appends a "Bug fixes and performance improvements." entry to `data/changelog.json` and rewrites `changelog.xml`. The workflow then pushes a `release/vX.Y.Z` branch, opens a PR titled `vX.Y.Z`, squash merges it and deploys. It tries auto-merge first and merges directly if the repo has auto-merge off. If today already has a release, it does nothing.
 
 Two repo settings have to be on, or the PR step fails:
 

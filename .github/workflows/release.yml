@@ -26,6 +26,8 @@ concurrency:
 jobs:
   release:
     runs-on: ubuntu-latest
+    outputs:
+      merged: ${{ steps.pr.outputs.merged }}
     steps:
       - uses: actions/checkout@v4
 
@@ -40,11 +42,12 @@ jobs:
         run: node scripts/release.mjs
 
       - name: Open and merge the PR
+        id: pr
         if: steps.bump.outputs.released == 'true'
         env:
           GH_TOKEN: ${{ github.token }}
           VERSION: ${{ steps.bump.outputs.version }}
-          BASE: ${{ github.event.repository.default_branch }}
+          BASE: ${{ github.event.repository.default_branch || 'main' }}
         run: |
           branch="release/v$VERSION"
           git config user.name "github-actions[bot]"
@@ -59,3 +62,13 @@ jobs:
           # Auto-merge needs the repo setting and a required check. Without them,
           # merge straight away.
           gh pr merge "$url" --squash --delete-branch --auto || gh pr merge "$url" --squash --delete-branch
+          if [ "$(gh pr view "$url" --json state -q .state)" = MERGED ]; then echo "merged=true" >> "$GITHUB_OUTPUT"; fi
+
+  deploy:
+    needs: release
+    if: needs.release.outputs.merged == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    uses: ./.github/workflows/pages.yml

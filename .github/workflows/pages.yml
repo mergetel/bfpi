@@ -1,0 +1,48 @@
+name: Deploy to GitHub Pages
+
+# Publishes the site files, and only those, to GitHub Pages. Runs on every push
+# to main, and the daily release calls it after merging, because a merge made
+# with the workflow's own token doesn't fire a push event.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # From the release workflow, github.sha is main before the release
+          # merged. Deploy what main is now.
+          ref: ${{ github.event.repository.default_branch || 'main' }}
+
+      - name: Collect the site
+        run: |
+          mkdir _site
+          cp -r index.html 404.html assets card changelog changelog.xml data pricing _site/
+          if [ -d launch-week ]; then cp -r launch-week _site/; fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

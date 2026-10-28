@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BFPI · Release notes, summarized</title>
 <meta name="description" content="Paste any changelog of any length. BFPI's model analyzes 4,812 tokens and tells your customers exactly what changed: bug fixes and performance improvements. A parody.">
-<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
-<link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="changelog.xml">
+<link rel="stylesheet" href="assets/site.css">
 <style>
   .hero { padding: 72px 0 40px; }
   .hero-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
@@ -101,12 +101,12 @@
 <main>
   <section class="hero">
     <div class="wrap">
-      <a class="eyebrow" href="/changelog" id="latest"><b>NEW</b> <span>See what shipped this week</span> →</a>
+      <a class="eyebrow" href="changelog/" id="latest"><b>NEW</b> <span>See what shipped this week</span> →</a>
       <h1>Release notes,<br><span class="grad">summarized.</span></h1>
       <p class="lede">Paste any changelog. Any length. Our model reads every line, weighs every change, and tells your customers exactly what they need to know.</p>
       <div class="ctas">
         <a class="btn btn-primary" href="#try">Summarize a changelog</a>
-        <a class="btn" href="/pricing">See pricing</a>
+        <a class="btn" href="pricing/">See pricing</a>
       </div>
 
       <div class="tool" id="try">
@@ -138,7 +138,7 @@
             </dl>
             <div class="actions">
               <button class="btn btn-primary" id="copy" type="button">Copy summary</button>
-              <a class="btn" id="tocard" href="/card">Make the share card</a>
+              <a class="btn" id="tocard" href="card/">Make the share card</a>
               <button class="btn" id="again" type="button">Summarize again</button>
             </div>
           </div>
@@ -198,7 +198,7 @@
         <p class="fine">The API is as real as everything else on this page.</p>
       </div>
 <pre class="code" id="api"><span class="c"># POST your entire quarter</span>
-curl -X POST https://api.<span data-site>bugfixesandperformanceimprovements.com</span>/v1/summarize \
+curl -X POST https://<span data-site>mergetel.github.io/bfpi</span>/api/v1/summarize \
   -H <span class="s">"Authorization: Bearer $BFPI_KEY"</span> \
   -d @CHANGELOG.md
 
@@ -250,7 +250,7 @@ curl -X POST https://api.<span data-site>bugfixesandperformanceimprovements.com<
 
 <footer id="foot"></footer>
 
-<script src="/assets/site.js"></script>
+<script src="assets/site.js"></script>
 <script>
 (() => {
   const EXAMPLE = `## 3.14.0
@@ -325,7 +325,7 @@ curl -X POST https://api.<span data-site>bugfixesandperformanceimprovements.com<
   function cardHref() {
     const p = new URLSearchParams();
     if (product.value.trim()) p.set('p', product.value.trim());
-    return '/card' + (p.toString() ? '#' + p.toString() : '');
+    return 'card/' + (p.toString() ? '#' + p.toString() : '');
   }
 
   let timer = null;
@@ -388,7 +388,7 @@ curl -X POST https://api.<span data-site>bugfixesandperformanceimprovements.com<
   });
 
   // The NEW pill names the latest release, from the same file the changelog reads.
-  fetch('/data/changelog.json')
+  fetch('data/changelog.json')
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
     .then((d) => {
       const last = d.entries[d.entries.length - 1];
