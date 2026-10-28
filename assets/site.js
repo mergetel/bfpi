@@ -1,29 +1,34 @@
 // The one place the domain lives. John is still buying it, so change it here and
 // nowhere else. scripts/release.mjs reads this line too, for the Atom feed.
-window.SITE = 'bugfixesandperformanceimprovements.com';
+window.SITE = 'mergetel.github.io/bfpi';
 
 (() => {
   const SENTENCE = 'Bug fixes and performance improvements.';
   window.SENTENCE = SENTENCE;
 
-  const here = location.pathname.replace(/index\.html$/, '').replace(/\/$/, '') || '/';
-  const link = (href, text, cls) =>
-    `<a href="${href}"${cls ? ` class="${cls}"` : ''}${here === href ? ' aria-current="page"' : ''}>${text}</a>`;
+  // The site root, worked out from where this script was loaded. On GitHub Pages
+  // without a custom domain that's /bfpi/, with one it's /.
+  const BASE = new URL('..', document.currentScript.src).pathname;
+  window.BASE = BASE;
+
+  const here = location.pathname.replace(/index\.html$/, '');
+  const link = (path, text, cls) =>
+    `<a href="${BASE}${path}"${cls ? ` class="${cls}"` : ''}${here === BASE + path ? ' aria-current="page"' : ''}>${text}</a>`;
 
   const nav = document.getElementById('nav');
   if (nav) {
     nav.innerHTML = `
       <div class="wrap navbar">
-        <a class="brand" href="/" aria-label="BFPI home">
+        <a class="brand" href="${BASE}" aria-label="BFPI home">
           <span class="mark" aria-hidden="true">✓</span><span>BFPI</span>
         </a>
         <nav aria-label="Main">
-          ${link('/', 'Product', 'home')}
-          ${link('/pricing', 'Pricing')}
-          ${link('/changelog', 'Changelog')}
-          ${link('/card', 'Share card')}
+          ${link('', 'Product', 'home')}
+          ${link('pricing/', 'Pricing')}
+          ${link('changelog/', 'Changelog')}
+          ${link('card/', 'Share card')}
         </nav>
-        <a class="btn btn-primary btn-sm" href="/#try">Start free</a>
+        <a class="btn btn-primary btn-sm" href="${BASE}#try">Start free</a>
       </div>`;
   }
 
@@ -40,7 +45,7 @@ window.SITE = 'bugfixesandperformanceimprovements.com';
         </section>
         <div class="footbar">
           <p>BFPI is a parody. The companies, logos, people and quotes on it are made up. No changelog has ever been read.</p>
-          <p><a href="/changelog.xml">Atom feed</a> · <a href="/pricing">Pricing</a> · <a href="https://merge.tel">merge.tel</a></p>
+          <p><a href="${BASE}changelog.xml">Atom feed</a> · <a href="${BASE}pricing/">Pricing</a> · <a href="https://merge.tel">merge.tel</a></p>
         </div>
       </div>`;
   }
