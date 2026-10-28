@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BFPI · Release notes, summarized</title>
+<meta name="description" content="Paste any changelog of any length. BFPI's model analyzes 4,812 tokens and tells your customers exactly what changed: bug fixes and performance improvements. A parody.">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  .hero { padding: 72px 0 40px; }
+  .hero-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .hero .ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+
+  /* The summarizer */
+  .tool { margin-top: 44px; padding: 8px; border-radius: 24px; background: linear-gradient(135deg, rgba(91,75,255,.18), rgba(177,75,255,.18)); }
+  .tool-inner { background: #fff; border-radius: 18px; border: 1px solid var(--line); overflow: hidden; }
+  .tool-head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; padding: 14px 18px; border-bottom: 1px solid var(--line); background: var(--soft); }
+  .dots { display: flex; gap: 6px; }
+  .dots i { width: 11px; height: 11px; border-radius: 50%; background: #d9dbe5; }
+  .tool-head label { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; flex: 1 1 260px; }
+  .tool-head input { flex: 1; min-width: 0; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; font: inherit; font-size: 14px; background: #fff; }
+  textarea { display: block; width: 100%; min-height: 260px; padding: 18px; border: 0; resize: vertical; font: 14px/1.6 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--text); outline: none; }
+  .tool-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 18px; border-top: 1px solid var(--line); }
+  .tool-foot .count { color: var(--muted); font-size: 14px; margin-right: auto; }
+
+  .run { display: none; padding: 28px 22px 30px; border-top: 1px solid var(--line); }
+  .run.on { display: block; }
+  .run-top { display: flex; justify-content: space-between; gap: 12px; font-weight: 700; }
+  .run-top span:last-child { font-variant-numeric: tabular-nums; color: var(--brand); }
+  .bar { height: 12px; margin: 12px 0 14px; border-radius: 999px; background: var(--soft); border: 1px solid var(--line); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--brand), var(--brand-2)); border-radius: 999px; }
+  .stages { margin: 0; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 14px; color: var(--muted); }
+  .stages li::before { content: '○'; display: inline-block; width: 22px; color: #b9bccb; }
+  .stages li.doing { color: var(--text); font-weight: 600; }
+  .stages li.doing::before { content: '◌'; color: var(--brand); animation: spin 1s linear infinite; }
+  .stages li.done::before { content: '✓'; color: var(--ok); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .result { display: none; padding: 30px 22px; border-top: 1px solid var(--line); background: linear-gradient(180deg, #fbfaff, #fff); }
+  .result.on { display: block; animation: rise .5s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  .result .label { margin: 0 0 8px; color: var(--muted); font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .result .summary { margin: 0 0 18px; font-size: clamp(24px, 4vw, 38px); font-weight: 800; line-height: 1.2; letter-spacing: -.02em; }
+  .meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 0 0 20px; }
+  .meta div { padding: 12px 14px; border: 1px solid var(--line); border-radius: 12px; background: #fff; }
+  .meta dt { color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .meta dd { margin: 2px 0 0; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .result .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  /* Logos */
+  .logos { padding: 36px 0 12px; }
+  .logos p { margin: 0 0 18px; color: var(--muted); font-size: 14px; text-align: center; }
+  .logo-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 18px 44px; color: #7b7f93; }
+  .logo-row svg { height: 30px; width: auto; }
+
+  /* Steps, features */
+  .step .n { display: grid; place-items: center; width: 36px; height: 36px; margin-bottom: 14px; border-radius: 10px; background: var(--soft); border: 1px solid var(--line); font-weight: 800; color: var(--brand); }
+  .feat .ico { font-size: 22px; margin-bottom: 10px; }
+  .feat p, .step p { margin: 0; color: var(--muted); }
+
+  /* API */
+  .api { display: grid; grid-template-columns: 1fr 1.2fr; gap: 36px; align-items: center; }
+  pre.code { margin: 0; padding: 20px; border-radius: 16px; background: #12131a; color: #e6e7ee; font: 13.5px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; overflow-x: auto; white-space: pre; }
+  pre.code .c { color: #7d8299; }
+  pre.code .s { color: #a5f3a1; }
+  pre.code .k { color: #c4b5fd; }
+
+  /* Testimonials */
+  .quote { display: flex; flex-direction: column; gap: 16px; }
+  .quote blockquote { margin: 0; font-size: 18px; line-height: 1.45; font-weight: 500; }
+  .who { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+  .av { display: grid; place-items: center; flex: none; width: 42px; height: 42px; border-radius: 50%; color: #fff; font-weight: 800; font-size: 15px; }
+  .who b { display: block; font-size: 15px; }
+  .who span { color: var(--muted); font-size: 14px; }
+  .stars { color: var(--warn); letter-spacing: 2px; }
+
+  /* Stats */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; text-align: center; }
+  .stats b { display: block; font-size: clamp(30px, 5vw, 48px); letter-spacing: -.03em; line-height: 1.1; }
+  .stats span { color: var(--muted); font-size: 15px; }
+
+  .cta { padding: 56px 24px; border-radius: 24px; text-align: center; color: #fff; background: linear-gradient(135deg, var(--brand), var(--brand-2)); }
+  .cta h2 { color: #fff; }
+  .cta p { margin: 0 auto 24px; max-width: 520px; opacity: .9; }
+  .cta .btn { background: #fff; color: var(--brand); border: 0; }
+
+  @media (max-width: 860px) {
+    .hero { padding-top: 44px; }
+    .api { grid-template-columns: 1fr; }
+    .meta { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .logo-row { gap: 16px 28px; }
+    .logo-row svg { height: 24px; }
+  }
+</style>
+</head>
+<body>
+<header id="nav"></header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <a class="eyebrow" href="/changelog" id="latest"><b>NEW</b> <span>See what shipped this week</span> →</a>
+      <h1>Release notes,<br><span class="grad">summarized.</span></h1>
+      <p class="lede">Paste any changelog. Any length. Our model reads every line, weighs every change, and tells your customers exactly what they need to know.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="#try">Summarize a changelog</a>
+        <a class="btn" href="/pricing">See pricing</a>
+      </div>
+
+      <div class="tool" id="try">
+        <div class="tool-inner">
+          <div class="tool-head">
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <label for="product">Product name <input id="product" maxlength="32" placeholder="Optional" autocomplete="off" spellcheck="false"></label>
+          </div>
+          <label for="log" class="sr">Your changelog</label>
+          <textarea id="log" spellcheck="false" placeholder="Paste your changelog here. Ten lines, ten thousand lines, a whole quarter of merged pull requests. It all fits."></textarea>
+          <div class="tool-foot">
+            <span class="count" id="count">0 characters</span>
+            <button class="btn btn-sm" id="example" type="button">Load an example</button>
+            <button class="btn btn-primary" id="go" type="button">Summarize</button>
+          </div>
+          <div class="run" id="run" aria-live="polite">
+            <div class="run-top"><span>Analyzing 4,812 tokens</span><span id="tok">0 / 4,812</span></div>
+            <div class="bar" role="progressbar" aria-label="Summarizing" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="bar"><i></i></div>
+            <ol class="stages" id="stages"></ol>
+          </div>
+          <div class="result" id="result" aria-live="polite">
+            <p class="label">Summary for <span id="for">your product</span></p>
+            <p class="summary" id="summary"></p>
+            <dl class="meta">
+              <div><dt>Input</dt><dd id="m-in">0 words</dd></div>
+              <div><dt>Output</dt><dd>5 words</dd></div>
+              <div><dt>Compression</dt><dd id="m-ratio">∞ : 1</dd></div>
+              <div><dt>Information kept</dt><dd>0%</dd></div>
+            </dl>
+            <div class="actions">
+              <button class="btn btn-primary" id="copy" type="button">Copy summary</button>
+              <a class="btn" id="tocard" href="/card">Make the share card</a>
+              <button class="btn" id="again" type="button">Summarize again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="logos" aria-label="Customers">
+    <div class="wrap">
+      <p>Trusted by teams who would rather not say what changed</p>
+      <div class="logo-row">
+        <svg viewBox="0 0 180 36" role="img" aria-label="Ticketorium"><rect x="2" y="7" width="22" height="22" rx="5" fill="none" stroke="currentColor" stroke-width="3"/><path d="M8 18h10M13 13v10" stroke="currentColor" stroke-width="3"/><text x="32" y="26" font-family="system-ui, sans-serif" font-size="21" font-weight="800" fill="currentColor">Ticketorium</text></svg>
+        <svg viewBox="0 0 170 36" role="img" aria-label="Kanbanana"><path d="M4 26c8 4 18 2 22-10" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round"/><text x="34" y="26" font-family="Georgia, serif" font-size="22" font-style="italic" font-weight="700" fill="currentColor">Kanbanana</text></svg>
+        <svg viewBox="0 0 170 36" role="img" aria-label="SYNERGEX"><polygon points="14,4 26,30 2,30" fill="currentColor"/><text x="34" y="26" font-family="system-ui, sans-serif" font-size="19" font-weight="900" letter-spacing="3" fill="currentColor">SYNERGEX</text></svg>
+        <svg viewBox="0 0 190 36" role="img" aria-label="wrapperly.ai"><circle cx="13" cy="18" r="10" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="13" cy="18" r="3" fill="currentColor"/><text x="30" y="26" font-family="ui-monospace, monospace" font-size="20" font-weight="700" fill="currentColor">wrapperly.ai</text></svg>
+        <svg viewBox="0 0 200 36" role="img" aria-label="Stealth Mode Inc."><rect x="2" y="8" width="20" height="20" fill="currentColor" opacity=".25"/><text x="30" y="26" font-family="system-ui, sans-serif" font-size="19" font-weight="600" fill="currentColor">Stealth Mode Inc.</text></svg>
+        <svg viewBox="0 0 160 36" role="img" aria-label="pivotly"><path d="M4 28 L14 8 L24 28" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linejoin="round"/><text x="32" y="26" font-family="system-ui, sans-serif" font-size="22" font-weight="300" fill="currentColor">pivotly</text></svg>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <p class="kicker">How it works</p>
+      <h2>Three steps. Two of them are yours.</h2>
+      <p class="lede">Our patented pipeline turns your hardest-working release into one calm, reassuring sentence your customers will never question.</p>
+      <div class="grid g3">
+        <div class="card step"><div class="n">1</div><h3>Paste your changelog</h3><p>Every merged pull request, every ticket, every late-night hotfix. The more you paste, the more we have to leave out.</p></div>
+        <div class="card step"><div class="n">2</div><h3>We analyze 4,812 tokens</h3><p>Always 4,812. Which 4,812 is proprietary. Our model weighs each change by how much it would worry someone.</p></div>
+        <div class="card step"><div class="n">3</div><h3>Your customers learn nothing</h3><p>They get a summary that is short, accurate in a technical sense, and identical to last week's. Nobody files a ticket.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block soft">
+    <div class="wrap">
+      <p class="kicker">Features</p>
+      <h2>Enterprise-grade vagueness.</h2>
+      <div class="grid g3" style="margin-top:28px">
+        <div class="card feat"><div class="ico">📏</div><h3>Any length</h3><p>One line or forty thousand. The output is always five words, so you can plan your layout around it.</p></div>
+        <div class="card feat"><div class="ico">🎯</div><h3>Fully deterministic</h3><p>Same input, same summary. Different input, same summary. Our evals score 100% on consistency.</p></div>
+        <div class="card feat"><div class="ico">🌍</div><h3>Multilingual</h3><p>Paste a changelog in any language. You get the summary in English, which is the language release notes are vague in.</p></div>
+        <div class="card feat"><div class="ico">🧠</div><h3>Zero hallucinations</h3><p>We can't invent a feature you didn't ship, because we don't mention any features at all.</p></div>
+        <div class="card feat"><div class="ico">🔒</div><h3>SOC 2 Type 0</h3><p>Your changelog never leaves your browser. Honestly, it never leaves the text box.</p></div>
+        <div class="card feat"><div class="ico">⚡</div><h3>Instant, after a while</h3><p>Results in about four seconds. Three point nine of those are the progress bar. People trust a progress bar.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap api">
+      <div>
+        <p class="kicker">API</p>
+        <h2>One call. One sentence.</h2>
+        <p class="lede">Wire BFPI into your release pipeline and never write a customer update again. Your customers won't notice. That's the feature.</p>
+        <p class="fine">The API is as real as everything else on this page.</p>
+      </div>
+<pre class="code" id="api"><span class="c"># POST your entire quarter</span>
+curl -X POST https://api.<span data-site>bugfixesandperformanceimprovements.com</span>/v1/summarize \
+  -H <span class="s">"Authorization: Bearer $BFPI_KEY"</span> \
+  -d @CHANGELOG.md
+
+<span class="c"># 200 OK, after a meaningful pause</span>
+{
+  <span class="k">"summary"</span>: <span class="s">"Bug fixes and performance improvements."</span>,
+  <span class="k">"tokens_analyzed"</span>: 4812,
+  <span class="k">"changes_mentioned"</span>: 0,
+  <span class="k">"confidence"</span>: 1.0
+}</pre>
+    </div>
+  </section>
+
+  <section class="block soft">
+    <div class="wrap">
+      <p class="kicker">Customers</p>
+      <h2>Loved by people who are definitely real.</h2>
+      <div class="grid g3" style="margin-top:28px">
+        <figure class="card quote"><span class="stars" aria-label="5 stars">★★★★★</span><blockquote>"Our customers have never been less informed."</blockquote><figcaption class="who"><span class="av" style="background:#5b4bff">AP</span><span><b>A. Placeholder</b><span>CTO, Ticketorium</span></span></figcaption></figure>
+        <figure class="card quote"><span class="stars" aria-label="5 stars">★★★★★</span><blockquote>"We merged 212 pull requests last quarter. Our users think we shipped one sentence, twelve times."</blockquote><figcaption class="who"><span class="av" style="background:#e5383b">JD</span><span><b>Jane Doe-ish</b><span>Head of Product, Kanbanana</span></span></figcaption></figure>
+        <figure class="card quote"><span class="stars" aria-label="5 stars">★★★★★</span><blockquote>"Legal loves it. Nothing in our release notes can be used against us anymore."</blockquote><figcaption class="who"><span class="av" style="background:#12a150">LT</span><span><b>Lorem T. Ipsum</b><span>General Counsel, SYNERGEX</span></span></figcaption></figure>
+        <figure class="card quote"><span class="stars" aria-label="5 stars">★★★★★</span><blockquote>"I used to spend Friday afternoons writing release notes. Now I spend them not writing release notes."</blockquote><figcaption class="who"><span class="av" style="background:#b14bff">CM</span><span><b>Chad McStandup</b><span>Staff Engineer, wrapperly.ai</span></span></figcaption></figure>
+        <figure class="card quote"><span class="stars" aria-label="5 stars">★★★★★</span><blockquote>"It summarized our forty-page incident postmortem perfectly. Nobody asked a single follow-up question."</blockquote><figcaption class="who"><span class="av" style="background:#f08c00">NN</span><span><b>Name Withheld</b><span>VP Engineering, Stealth Mode Inc.</span></span></figcaption></figure>
+        <figure class="card quote"><span class="stars" aria-label="5 stars">★★★★★</span><blockquote>"We pivoted three times last year. The release notes didn't have to change once."</blockquote><figcaption class="who"><span class="av" style="background:#12131a">FP</span><span><b>Founder Person</b><span>CEO, pivotly</span></span></figcaption></figure>
+      </div>
+      <p class="fine center" style="margin-top:22px">People, companies and quotes are made up. Any resemblance to your own release notes is the point.</p>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="wrap">
+      <div class="stats">
+        <div><b class="grad">4,812</b><span>tokens analyzed, every time</span></div>
+        <div><b class="grad">5</b><span>words of output</span></div>
+        <div><b class="grad">0</b><span>customers informed</span></div>
+        <div><b class="grad">100%</b><span>summary consistency</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:40px">
+    <div class="cta">
+      <h2>Your customers deserve to know what changed.</h2>
+      <p>We respectfully disagree. Start free today and tell them the same thing everybody else does.</p>
+      <a class="btn" href="#try">Summarize your changelog</a>
+    </div>
+  </section>
+</main>
+
+<footer id="foot"></footer>
+
+<script src="/assets/site.js"></script>
+<script>
+(() => {
+  const EXAMPLE = `## 3.14.0
+### Added
+- CSV export on the Reports page, including custom date ranges
+- Bulk edit for tasks: select up to 500 and change owner, due date or status at once
+- Saved filters you can share with your whole workspace
+- Two-factor auth with hardware keys, not just authenticator apps
+- Keyboard shortcut (G then R) to jump to Reports
+- A "Duplicate project" button that copies tasks, labels and automations
+
+### Changed
+- Search is about 4x faster on workspaces with more than 10,000 projects
+- The sidebar remembers which sections you collapsed
+- Dark mode follows your system setting unless you pick one
+- Automations no longer carry the "Beta" label
+- Invites now expire after 14 days instead of never
+- Free plan: project limit raised from 3 to 5
+
+### Fixed
+- The app crashed when a workspace name contained an emoji
+- Due dates showed one day early for anyone west of UTC
+- Comments posted from the mobile app sometimes appeared twice
+- Webhooks retried forever on a 410 instead of giving up
+- The billing page showed last month's invoice as unpaid
+- Drag and drop between boards lost the task's attachments
+- Password reset links stopped working after 10 minutes instead of 60
+- Typing fast in the editor could drop the last character
+- CSV import choked on files saved by a certain spreadsheet app
+- The "Mark all as read" button marked nothing as read
+
+### Removed
+- The legacy v1 API, after 18 months of warnings
+- The "Classic" theme nobody had used since last spring
+
+### Security
+- Patched an issue where a removed member could still see project names in search
+- Session cookies are now SameSite=Lax by default
+
+## 3.13.2
+### Fixed
+- Exports over 50 MB failed silently; they now email you a link
+- The onboarding checklist reappeared for some long-time users
+- Time zone picker listed one city twice`;
+
+  const STAGES = [
+    'Tokenizing your changelog',
+    'Reading every line, carefully',
+    'Finding what your customers care about',
+    'Weighing each change by how worried it would make someone',
+    'Removing specifics',
+    'Removing the rest',
+    'Compressing 4,812 tokens into five words',
+  ];
+
+  const $ = (id) => document.getElementById(id);
+  const log = $('log'), product = $('product'), go = $('go');
+  const run = $('run'), result = $('result'), bar = $('bar'), tok = $('tok'), stages = $('stages');
+
+  const words = (s) => (s.trim().match(/\S+/g) || []).length;
+  const fmt = (n) => n.toLocaleString('en-US');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function updateCount() {
+    const c = log.value.length;
+    $('count').textContent = `${fmt(c)} character${c === 1 ? '' : 's'}`;
+  }
+
+  log.addEventListener('input', updateCount);
+  $('example').addEventListener('click', () => { log.value = EXAMPLE; updateCount(); log.scrollTop = 0; });
+
+  function cardHref() {
+    const p = new URLSearchParams();
+    if (product.value.trim()) p.set('p', product.value.trim());
+    return '/card' + (p.toString() ? '#' + p.toString() : '');
+  }
+
+  let timer = null;
+  function summarize() {
+    if (timer) return;
+    go.disabled = true;
+    go.textContent = 'Summarizing…';
+    result.classList.remove('on');
+    run.classList.add('on');
+    stages.innerHTML = STAGES.map((s) => `<li>${s}</li>`).join('');
+    const items = [...stages.children];
+    const total = reduce ? 1200 : 4400;
+    const t0 = performance.now();
+    const tick = (now) => {
+      const t = Math.min(1, (now - t0) / total);
+      // Fast start, a stall near the end. The stall is what makes it feel smart.
+      const eased = t < 0.85 ? (1 - Math.pow(1 - t / 0.85, 2)) * 0.93 : 0.93 + (t - 0.85) / 0.15 * 0.07;
+      bar.firstElementChild.style.width = (eased * 100).toFixed(1) + '%';
+      bar.setAttribute('aria-valuenow', String(Math.round(eased * 100)));
+      tok.textContent = `${fmt(Math.round(eased * 4812))} / 4,812`;
+      const at = Math.min(items.length - 1, Math.floor(t * items.length));
+      items.forEach((li, i) => { li.className = i < at ? 'done' : i === at ? 'doing' : ''; });
+      if (t < 1) { timer = requestAnimationFrame(tick); return; }
+      items.forEach((li) => { li.className = 'done'; });
+      timer = null;
+      finish();
+    };
+    timer = requestAnimationFrame(tick);
+  }
+
+  function finish() {
+    const name = product.value.trim();
+    const n = words(log.value);
+    $('for').textContent = name || 'your product';
+    $('summary').textContent = window.SENTENCE;
+    $('m-in').textContent = n ? `${fmt(n)} word${n === 1 ? '' : 's'}` : 'nothing';
+    $('m-ratio').textContent = n ? `${fmt(Math.max(1, Math.round(n / 5)))} : 1` : '0 : 5';
+    $('tocard').href = cardHref();
+    run.classList.remove('on');
+    result.classList.add('on');
+    go.disabled = false;
+    go.textContent = 'Summarize';
+    result.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'nearest' });
+  }
+
+  go.addEventListener('click', summarize);
+  $('again').addEventListener('click', summarize);
+  product.addEventListener('input', () => { $('tocard').href = cardHref(); });
+
+  const copy = $('copy');
+  copy.addEventListener('click', async () => {
+    const before = copy.textContent;
+    try {
+      await navigator.clipboard.writeText(window.SENTENCE);
+      copy.textContent = 'Copied';
+    } catch (_err) {
+      copy.textContent = "Couldn't copy, select it by hand";
+    }
+    setTimeout(() => { copy.textContent = before; }, 1800);
+  });
+
+  // The NEW pill names the latest release, from the same file the changelog reads.
+  fetch('/data/changelog.json')
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(r.status))))
+    .then((d) => {
+      const last = d.entries[d.entries.length - 1];
+      if (last) $('latest').querySelector('span').textContent = `v${last.version} is out. Read what changed`;
+    })
+    .catch(() => {});
+})();
+</script>
+</body>
+</html>
