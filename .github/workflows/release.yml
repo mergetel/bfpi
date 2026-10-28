@@ -1,0 +1,61 @@
+name: Daily release
+
+# Bumps the version, appends "Bug fixes and performance improvements." to the
+# changelog, then opens a PR titled with the new version and merges it.
+
+on:
+  schedule:
+    - cron: '17 15 * * *'
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: Force a kind. Leave blank to let the calendar pick (major on the 1st, minor on Mondays, patch otherwise).
+        required: false
+        default: ''
+        type: choice
+        options: ['', patch, minor, major]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: daily-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cut the release
+        id: bump
+        env:
+          RELEASE_KIND: ${{ inputs.kind }}
+        run: node scripts/release.mjs
+
+      - name: Open and merge the PR
+        if: steps.bump.outputs.released == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.bump.outputs.version }}
+          BASE: ${{ github.event.repository.default_branch }}
+        run: |
+          branch="release/v$VERSION"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "$branch"
+          git add data/changelog.json changelog.xml
+          if [ -d launch-week ]; then git add launch-week; fi
+          git commit -m "v$VERSION" -m "Bug fixes and performance improvements."
+          git push origin "$branch"
+          url=$(gh pr create --base "$BASE" --head "$branch" --title "v$VERSION" --body-file "$RUNNER_TEMP/release-body.md")
+          echo "Opened $url"
+          # Auto-merge needs the repo setting and a required check. Without them,
+          # merge straight away.
+          gh pr merge "$url" --squash --delete-branch --auto || gh pr merge "$url" --squash --delete-branch

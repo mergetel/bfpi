@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pricing · BFPI</title>
+<meta name="description" content="Free gets bug fixes. Pro gets bug fixes and performance improvements. Enterprise adds stability. A parody.">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  .top { padding: 64px 0 28px; }
+  .toggle { display: inline-flex; gap: 4px; padding: 4px; margin-bottom: 36px; border: 1px solid var(--line); border-radius: 999px; background: var(--soft); }
+  .toggle button { padding: 8px 16px; border: 0; border-radius: 999px; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: var(--muted); cursor: pointer; }
+  .toggle button[aria-pressed="true"] { background: #fff; color: var(--text); box-shadow: 0 1px 4px rgba(20,20,60,.12); }
+  .tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; align-items: stretch; }
+  .tier { display: flex; flex-direction: column; gap: 16px; padding: 28px; }
+  .tier.pop { border: 2px solid var(--brand); box-shadow: 0 20px 50px rgba(91,75,255,.16); position: relative; }
+  .tier.pop::before { content: 'Most popular'; position: absolute; top: -13px; left: 24px; padding: 3px 10px; border-radius: 999px; background: var(--brand); color: #fff; font-size: 12px; font-weight: 700; }
+  .tier h2 { margin: 0; font-size: 22px; }
+  .price { font-size: 44px; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
+  .price small { font-size: 16px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+  .out { margin: 0; padding: 14px 16px; border-radius: 12px; background: var(--soft); border: 1px dashed #c9cce0; font-weight: 700; }
+  .out span { display: block; margin-bottom: 4px; color: var(--muted); font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+  .tier ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; font-size: 15px; }
+  .tier li::before { content: '✓'; margin-right: 10px; color: var(--ok); font-weight: 800; }
+  .tier .btn { margin-top: auto; width: 100%; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
+  thead th { font-size: 14px; color: var(--muted); }
+  tbody th { font-weight: 600; }
+
+  .faq { display: grid; gap: 12px; max-width: 760px; }
+  details { padding: 16px 20px; border: 1px solid var(--line); border-radius: 14px; background: #fff; }
+  summary { cursor: pointer; font-weight: 700; }
+  details p { margin: 10px 0 0; color: var(--muted); }
+
+  .sales { padding: 28px; }
+  .sales-head { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+  .sales-head .av { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; font-weight: 800; }
+  .sales-head b { display: block; }
+  .sales-head span { color: var(--muted); font-size: 14px; }
+  .bubble { margin: 0 0 22px; padding: 16px 18px; border-radius: 16px 16px 16px 4px; background: var(--soft); border: 1px solid var(--line); font-size: 20px; font-weight: 700; min-height: 64px; }
+  .typing i { display: inline-block; width: 8px; height: 8px; margin-right: 5px; border-radius: 50%; background: #a2a6bb; animation: blink 1s infinite; }
+  .typing i:nth-child(2) { animation-delay: .15s; }
+  .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes blink { 50% { opacity: .25; } }
+  .sales .row { display: flex; gap: 10px; justify-content: flex-end; }
+
+  @media (max-width: 860px) {
+    .tiers { grid-template-columns: 1fr; }
+    .top { padding-top: 40px; }
+    table { font-size: 13px; }
+    th, td { padding: 10px 6px; }
+  }
+</style>
+</head>
+<body>
+<header id="nav"></header>
+
+<main class="wrap">
+  <section class="top center">
+    <p class="kicker">Pricing</p>
+    <h1>Pay for <span class="grad">fewer words.</span></h1>
+    <p class="lede">Every plan reads your whole changelog. What you pay for is how much of it we pretend to have read.</p>
+    <div class="toggle" role="group" aria-label="Billing period">
+      <button type="button" aria-pressed="true" data-period="mo">Monthly</button>
+      <button type="button" aria-pressed="false" data-period="yr">Annual (save 0%)</button>
+    </div>
+  </section>
+
+  <section class="tiers">
+    <article class="card tier">
+      <h2>Free</h2>
+      <div class="price">$0<small> forever</small></div>
+      <p class="out"><span>Your summary</span>Bug fixes.</p>
+      <ul>
+        <li>Unlimited changelogs</li>
+        <li>4,812 tokens analyzed</li>
+        <li>Two whole words</li>
+        <li>Community support (a forum nobody reads)</li>
+      </ul>
+      <a class="btn" href="/#try">Start free</a>
+    </article>
+
+    <article class="card tier pop">
+      <h2>Pro</h2>
+      <div class="price" data-mo="$49" data-yr="$588"><span>$49</span><small data-mo=" / month" data-yr=" / year"> / month</small></div>
+      <p class="out"><span>Your summary</span>Bug fixes and performance improvements.</p>
+      <ul>
+        <li>Everything in Free</li>
+        <li>Plus "and performance improvements"</li>
+        <li>Priority summarizing (same speed)</li>
+        <li>Your logo next to the sentence</li>
+        <li>Email support, answered with the sentence</li>
+      </ul>
+      <a class="btn btn-primary" href="/#try">Start a 14-day trial</a>
+    </article>
+
+    <article class="card tier">
+      <h2>Enterprise</h2>
+      <div class="price">Custom<small> annual</small></div>
+      <p class="out"><span>Your summary</span>Bug fixes and performance improvements and stability.</p>
+      <ul>
+        <li>Everything in Pro</li>
+        <li>Plus "and stability"</li>
+        <li>SSO (Summarize Sentence Once)</li>
+        <li>99.999% sentence uptime</li>
+        <li>A dedicated summary (the same one)</li>
+        <li>SOC 2 Type 0</li>
+      </ul>
+      <button class="btn" type="button" id="sales">Contact sales</button>
+    </article>
+  </section>
+
+  <section class="block">
+    <h2>Compare plans</h2>
+    <table>
+      <thead><tr><th scope="col"><span class="sr">Feature</span></th><th scope="col">Free</th><th scope="col">Pro</th><th scope="col">Enterprise</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Summary length</th><td>2 words</td><td>5 words</td><td>7 words</td></tr>
+        <tr><th scope="row">Tokens analyzed</th><td>4,812</td><td>4,812</td><td>4,812</td></tr>
+        <tr><th scope="row">Changes mentioned</th><td>0</td><td>0</td><td>0</td></tr>
+        <tr><th scope="row">Customers informed</th><td>0</td><td>0</td><td>0, at scale</td></tr>
+        <tr><th scope="row">Conjunctions</th><td>None</td><td>1</td><td>2</td></tr>
+        <tr><th scope="row">Annual discount</th><td>0%</td><td>0%</td><td>Let's talk</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="block" style="padding-top:0">
+    <h2>Questions</h2>
+    <div class="faq">
+      <details><summary>Can I customize the summary?</summary><p>Enterprise customers can request a custom summary. It's "Bug fixes and performance improvements and stability."</p></details>
+      <details><summary>Is there a free trial?</summary><p>Free is the trial. It's also the product, minus three words.</p></details>
+      <details><summary>Do you actually read the changelog?</summary><p>We analyze 4,812 tokens of it. Which 4,812 is proprietary, and also none of them.</p></details>
+      <details><summary>What happens if I cancel?</summary><p>You go back to writing "bug fixes and performance improvements" yourself, by hand, like an animal.</p></details>
+      <details><summary>Is this real?</summary><p>No. BFPI is a parody. Nobody is billed, nothing is saved, and the Contact sales button only knows one sentence.</p></details>
+    </div>
+  </section>
+</main>
+
+<dialog id="modal" aria-labelledby="sales-title">
+  <div class="sales">
+    <div class="sales-head">
+      <span class="av" aria-hidden="true">AE</span>
+      <span><b id="sales-title">Your account executive</b><span>Usually replies instantly</span></span>
+    </div>
+    <p class="bubble" id="bubble" aria-live="polite"></p>
+    <div class="row">
+      <button class="btn" type="button" id="more">Ask for details</button>
+      <button class="btn btn-primary" type="button" id="close">Sounds good</button>
+    </div>
+  </div>
+</dialog>
+
+<footer id="foot"></footer>
+
+<script src="/assets/site.js"></script>
+<script>
+(() => {
+  const ENTERPRISE = 'Bug fixes and performance improvements and stability.';
+  const modal = document.getElementById('modal');
+  const bubble = document.getElementById('bubble');
+  let wait = null;
+
+  function reply() {
+    clearTimeout(wait);
+    bubble.innerHTML = '<span class="typing" aria-label="Sales is typing"><i></i><i></i><i></i></span>';
+    wait = setTimeout(() => { bubble.textContent = ENTERPRISE; }, 1300);
+  }
+
+  document.getElementById('sales').addEventListener('click', () => { modal.showModal(); reply(); });
+  document.getElementById('more').addEventListener('click', reply);
+  document.getElementById('close').addEventListener('click', () => modal.close());
+  modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); });
+  modal.addEventListener('close', () => clearTimeout(wait));
+
+  // The toggle changes the label. The total stays the same, which is the discount.
+  const buttons = document.querySelectorAll('.toggle button');
+  buttons.forEach((b) => b.addEventListener('click', () => {
+    buttons.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    const k = b.dataset.period;
+    document.querySelectorAll('[data-mo]').forEach((el) => {
+      const target = el.tagName === 'SMALL' ? el : el.querySelector('span');
+      target.textContent = el.dataset[k];
+    });
+  }));
+})();
+</script>
+</body>
+</html>

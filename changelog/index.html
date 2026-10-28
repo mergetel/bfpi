@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Changelog · BFPI</title>
+<meta name="description" content="Every BFPI release, summarized by BFPI. Bug fixes and performance improvements, daily, forever. A parody.">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  .top { padding: 56px 0 28px; }
+  .feed { display: inline-flex; align-items: center; gap: 8px; }
+  .feed svg { width: 16px; height: 16px; }
+  ol.log { margin: 0; padding: 0; list-style: none; border-left: 2px solid var(--line); }
+  ol.log li { position: relative; padding: 0 0 28px 28px; }
+  ol.log li::before { content: ''; position: absolute; left: -7px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: #fff; border: 2px solid var(--brand); }
+  ol.log li.major::before { background: var(--brand); width: 16px; height: 16px; left: -9px; top: 6px; }
+  .head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 12px; }
+  .head a.v { font-size: 20px; font-weight: 800; color: var(--text); text-decoration: none; letter-spacing: -.01em; }
+  .tag { padding: 2px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; background: var(--soft); border: 1px solid var(--line); color: var(--muted); }
+  .tag.minor { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+  .tag.major { background: linear-gradient(135deg, var(--brand), var(--brand-2)); border-color: transparent; color: #fff; }
+  time { color: var(--muted); font-size: 14px; }
+  ol.log p { margin: 6px 0 0; font-size: 17px; }
+  .lw { display: inline-block; margin-top: 8px; font-weight: 600; }
+  .err { padding: 16px; border: 1px solid #f5c2c7; border-radius: 12px; background: #fff5f5; color: #842029; }
+  @media (max-width: 860px) { .top { padding-top: 36px; } }
+</style>
+</head>
+<body>
+<header id="nav"></header>
+
+<main class="wrap">
+  <section class="top">
+    <p class="kicker">Changelog</p>
+    <h1>What's new in <span class="grad">BFPI.</span></h1>
+    <p class="lede">We ship every day. Every release is summarized by our own product, because we believe in it.</p>
+    <a class="btn btn-sm feed" href="/changelog.xml"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="3" cy="13" r="2" fill="#f08c00"/><path d="M1 7a8 8 0 0 1 8 8M1 2a13 13 0 0 1 13 13" fill="none" stroke="#f08c00" stroke-width="2.2"/></svg>Subscribe (Atom)</a>
+  </section>
+
+  <section style="margin-bottom:24px">
+    <ol class="log" id="log" aria-live="polite"><li>Loading releases…</li></ol>
+    <noscript><p>The list needs JavaScript. The <a href="/changelog.xml">Atom feed</a> doesn't, and it says the same thing.</p></noscript>
+  </section>
+</main>
+
+<footer id="foot"></footer>
+
+<script src="/assets/site.js"></script>
+<script>
+(() => {
+  const list = document.getElementById('log');
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const day = (iso) => new Date(iso + 'T12:00:00Z').toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' });
+
+  fetch('/data/changelog.json', { cache: 'no-cache' })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`HTTP ${r.status}`))))
+    .then((d) => {
+      list.innerHTML = d.entries.slice().reverse().map((e) => `
+        <li class="${esc(e.kind)}" id="v${esc(e.version)}">
+          <div class="head">
+            <a class="v" href="#v${esc(e.version)}">v${esc(e.version)}</a>
+            <span class="tag ${esc(e.kind)}">${esc(e.kind)}</span>
+            <time datetime="${esc(e.date)}">${day(e.date)}</time>
+          </div>
+          <p>${esc(e.notes)}</p>
+          ${e.launchWeek ? `<a class="lw" href="${esc(e.launchWeek)}">Read about Launch Week ${esc(e.version.split('.')[0])} →</a>` : ''}
+        </li>`).join('');
+      if (location.hash) document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    })
+    .catch((err) => {
+      list.innerHTML = `<li class="err">Couldn't load the changelog (${esc(err.message)}). It said "Bug fixes and performance improvements." anyway.</li>`;
+    });
+})();
+</script>
+</body>
+</html>

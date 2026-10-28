@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Share card · BFPI</title>
+<meta name="description" content="Make a share card of your product's release notes: Bug fixes and performance improvements. Stamped, because it's a joke.">
+<link rel="alternate" type="application/atom+xml" title="BFPI changelog" href="/changelog.xml">
+<link rel="stylesheet" href="/assets/site.css">
+<style>
+  .top { padding: 56px 0 24px; }
+  .stage { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--soft); box-shadow: 0 20px 50px rgba(20,20,60,.08); }
+  canvas { display: block; width: 100%; height: auto; }
+  .controls { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; margin: 20px 0 12px; padding: 20px; }
+  .controls label { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+  .controls label b { color: var(--text); }
+  .controls input { width: 100%; padding: 11px 12px; border: 1px solid var(--line); border-radius: 10px; font: inherit; }
+  .buttons { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 10px; }
+  pre.post { margin: 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--soft); white-space: pre-wrap; word-break: break-word; font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; }
+  @media (max-width: 860px) { .controls { grid-template-columns: 1fr; } .top { padding-top: 36px; } }
+</style>
+</head>
+<body>
+<header id="nav"></header>
+
+<main class="wrap">
+  <section class="top">
+    <p class="kicker">Share card</p>
+    <h1>Announce your release.<br><span class="grad">Say nothing.</span></h1>
+    <p class="lede">Type your product's name and get the release notes card everyone has secretly been posting for years. The stamp is part of the image. So is the strip that says it's a parody.</p>
+  </section>
+
+  <section class="stage">
+    <canvas id="card" width="1200" height="630" role="img" aria-label="A share card that says bug fixes and performance improvements"></canvas>
+  </section>
+
+  <section class="card controls" aria-label="Card settings">
+    <label><b>Your product</b>
+      <input type="text" id="name" maxlength="32" autocomplete="off" spellcheck="false">
+    </label>
+    <button class="btn" id="reroll" type="button">New version number</button>
+    <div class="buttons">
+      <button class="btn btn-primary" id="download" type="button">Download PNG</button>
+      <button class="btn" id="copy" type="button">Copy the post</button>
+      <button class="btn" id="link" type="button">Copy link to this card</button>
+    </div>
+  </section>
+
+  <section style="margin-top:28px">
+    <h2 style="font-size:22px">Your post</h2>
+    <pre class="post" id="post"></pre>
+  </section>
+</main>
+
+<footer id="foot"></footer>
+
+<script src="/assets/site.js"></script>
+<script>
+(() => {
+  const SITE = window.SITE;
+  const W = 1200, H = 630;
+  const FONT = 'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "DejaVu Sans", sans-serif';
+
+  const NAMES = ['Ticketorium', 'Kanbanana', 'wrapperly.ai', 'pivotly', 'SYNERGEX Cloud', 'Dashboard of Dashboards'];
+  const STAMPS = ['SAID NOTHING', 'CONTENT-FREE', 'ZERO DETAILS', 'NOT A CHANGELOG'];
+  const STATS = [
+    ['Changes analyzed', '4,812 tokens'],
+    ['Changes mentioned', '0'],
+    ['Customers informed', '0'],
+    ['Reading time', '2 seconds'],
+  ];
+
+  // Seeded PRNG so a URL always rebuilds the same card.
+  function mulberry32(a) {
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      let t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const randomSeed = () => Math.floor(Math.random() * 4294967296) >>> 0;
+
+  function readState() {
+    const p = new URLSearchParams(location.hash.slice(1));
+    const seed = Number(p.get('s'));
+    return {
+      seed: p.has('s') && Number.isFinite(seed) ? seed >>> 0 : randomSeed(),
+      n: (p.get('p') || '').slice(0, 32),
+    };
+  }
+  function writeState(s) {
+    const p = new URLSearchParams({ s: String(s.seed) });
+    if (s.n) p.set('p', s.n);
+    history.replaceState(null, '', '#' + p.toString());
+  }
+
+  // Everything random is drawn here, in a fixed order, so typing a name
+  // never changes the version number.
+  function makeUp(s) {
+    const rnd = mulberry32(s.seed);
+    const pick = (list) => list[Math.floor(rnd() * list.length)];
+    const version = `${1 + Math.floor(rnd() * 12)}.${Math.floor(rnd() * 99)}.${Math.floor(rnd() * 31)}`;
+    const stamp = pick(STAMPS);
+    const tilt = -(6 + rnd() * 8);
+    const fallback = pick(NAMES);
+    return { version, stamp, tilt, name: s.n.trim() || fallback };
+  }
+
+  function rr(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function wrap(ctx, text, maxW) {
+    const out = [];
+    let line = '';
+    text.split(' ').forEach((word) => {
+      const next = line ? line + ' ' + word : word;
+      if (ctx.measureText(next).width > maxW && line) { out.push(line); line = word; }
+      else line = next;
+    });
+    if (line) out.push(line);
+    return out;
+  }
+
+  function draw(ctx, m) {
+    ctx.clearRect(0, 0, W, H);
+    ctx.textBaseline = 'alphabetic';
+    ctx.textAlign = 'left';
+
+    const bg = ctx.createLinearGradient(0, 0, W, H);
+    bg.addColorStop(0, '#ffffff');
+    bg.addColorStop(1, '#efeaff');
+    ctx.fillStyle = bg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Soft blob, top right, for the startup look.
+    const blob = ctx.createRadialGradient(1040, 80, 10, 1040, 80, 420);
+    blob.addColorStop(0, 'rgba(177,75,255,0.28)');
+    blob.addColorStop(1, 'rgba(177,75,255,0)');
+    ctx.fillStyle = blob;
+    ctx.fillRect(0, 0, W, H);
+
+    // Header: logo mark, brand, version pill.
+    const grad = ctx.createLinearGradient(56, 48, 96, 88);
+    grad.addColorStop(0, '#5b4bff');
+    grad.addColorStop(1, '#b14bff');
+    rr(ctx, 56, 48, 40, 40, 11);
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = `800 24px ${FONT}`;
+    ctx.textAlign = 'center';
+    ctx.fillText('✓', 76, 77);
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#12131a';
+    ctx.font = `800 26px ${FONT}`;
+    ctx.fillText('BFPI', 108, 77);
+
+    ctx.font = `700 18px ${FONT}`;
+    const pill = `RELEASE NOTES · v${m.version}`;
+    const pw = ctx.measureText(pill).width + 28;
+    rr(ctx, W - 56 - pw, 50, pw, 36, 18);
+    ctx.fillStyle = '#12131a';
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.fillText(pill, W - 56 - pw + 14, 74);
+
+    // "Release notes for X:"
+    ctx.fillStyle = '#5b6075';
+    let size = 40;
+    const lead = `Release notes for ${m.name}:`;
+    ctx.font = `600 ${size}px ${FONT}`;
+    while (size > 26 && ctx.measureText(lead).width > W - 112) { size -= 2; ctx.font = `600 ${size}px ${FONT}`; }
+    ctx.fillText(lead, 56, 170);
+
+    // The sentence.
+    const big = ctx.createLinearGradient(56, 0, 900, 0);
+    big.addColorStop(0, '#12131a');
+    big.addColorStop(1, '#3a2fb8');
+    ctx.fillStyle = big;
+    ctx.font = `800 76px ${FONT}`;
+    const lines = wrap(ctx, window.SENTENCE, W - 112);
+    lines.forEach((l, i) => ctx.fillText(l, 52, 246 + i * 84));
+
+    // Stat tiles.
+    const gap = 16, tx = 56, ty = 462, th = 88;
+    const tw = (W - 112 - gap * 3) / 4;
+    STATS.forEach(([label, value], i) => {
+      const x = tx + i * (tw + gap);
+      rr(ctx, x, ty, tw, th, 14);
+      ctx.fillStyle = 'rgba(255,255,255,0.85)';
+      ctx.fill();
+      ctx.strokeStyle = '#e4e7f0';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.fillStyle = '#5b6075';
+      ctx.font = `700 14px ${FONT}`;
+      ctx.fillText(label.toUpperCase(), x + 18, ty + 30);
+      ctx.fillStyle = '#12131a';
+      ctx.font = `800 28px ${FONT}`;
+      ctx.fillText(value, x + 18, ty + 66);
+    });
+
+    // The stamp. It sits over the sentence, on purpose.
+    ctx.save();
+    ctx.translate(930, 330);
+    ctx.rotate((m.tilt * Math.PI) / 180);
+    ctx.font = `900 50px ${FONT}`;
+    const sw = ctx.measureText(m.stamp).width + 44;
+    ctx.globalAlpha = 0.86;
+    ctx.strokeStyle = '#e5383b';
+    ctx.lineWidth = 6;
+    rr(ctx, -sw / 2, -40, sw, 80, 10);
+    ctx.stroke();
+    ctx.lineWidth = 2;
+    rr(ctx, -sw / 2 + 9, -31, sw - 18, 62, 6);
+    ctx.stroke();
+    ctx.fillStyle = '#e5383b';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(m.stamp, 0, 3);
+    ctx.restore();
+
+    // Footer strip, baked into the PNG.
+    ctx.fillStyle = '#f5c518';
+    ctx.fillRect(0, H - 40, W, 40);
+    ctx.fillStyle = '#12131a';
+    ctx.font = `700 17px ${FONT}`;
+    ctx.textBaseline = 'middle';
+    ctx.fillText('Parody. Not real release notes. No changelog was read to make this card.', 56, H - 20);
+    ctx.textAlign = 'right';
+    ctx.fillText(SITE, W - 56, H - 20);
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+  }
+
+  const post = (m) =>
+    `Release notes for ${m.name} v${m.version}:\n\n${window.SENTENCE}\n\nThat's it. That's the release.\n\n(Made with BFPI, a parody. It says that every time. ${SITE}/card)`;
+
+  const canvas = document.getElementById('card');
+  const ctx = canvas.getContext('2d');
+  const nameEl = document.getElementById('name');
+  const postEl = document.getElementById('post');
+
+  let state = readState();
+  nameEl.value = state.n;
+
+  function render() {
+    const m = makeUp(state);
+    nameEl.placeholder = m.name;
+    draw(ctx, m);
+    postEl.textContent = post(m);
+    canvas.setAttribute('aria-label',
+      `A parody release notes card for ${m.name} v${m.version}: ${window.SENTENCE} Stamped ${m.stamp}.`);
+    writeState(state);
+  }
+
+  window.addEventListener('hashchange', () => { state = readState(); nameEl.value = state.n; render(); });
+  nameEl.addEventListener('input', () => { state.n = nameEl.value.slice(0, 32); render(); });
+  document.getElementById('reroll').addEventListener('click', () => { state.seed = randomSeed(); render(); });
+
+  document.getElementById('download').addEventListener('click', () => {
+    const m = makeUp(state);
+    const slug = m.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'release';
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `release-notes-${slug}-v${m.version}.png`;
+      a.click();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }, 'image/png');
+  });
+
+  async function copyText(btn, text) {
+    const before = btn.textContent;
+    try {
+      await navigator.clipboard.writeText(text);
+      btn.textContent = 'Copied';
+    } catch (_err) {
+      btn.textContent = "Couldn't copy, select it by hand";
+    }
+    setTimeout(() => { btn.textContent = before; }, 1800);
+  }
+  document.getElementById('copy').addEventListener('click', (e) => copyText(e.currentTarget, postEl.textContent));
+  document.getElementById('link').addEventListener('click', (e) => copyText(e.currentTarget, location.href));
+
+  // Fonts can land after the first paint, so draw again once they have.
+  render();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(render);
+})();
+</script>
+</body>
+</html>

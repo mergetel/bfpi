@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>BFPI changelog</title>
+  <subtitle>A parody changelog. Every release says the same thing.</subtitle>
+  <link rel="self" type="application/atom+xml" href="https://bugfixesandperformanceimprovements.com/changelog.xml"/>
+  <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog"/>
+  <id>urn:uuid:7fd9d054-5194-5c26-960c-3035b1fb2fc2</id>
+  <updated>2026-10-27T15:17:00Z</updated>
+  <author><name>BFPI</name><uri>https://bugfixesandperformanceimprovements.com/</uri></author>
+  <rights>Parody. Nothing in this feed describes a real change.</rights>
+  <entry>
+    <title>v4.81.1</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.81.1"/>
+    <id>urn:uuid:f0999057-bcb4-5e57-a81e-064a85bc82a6</id>
+    <published>2026-10-27T15:17:00Z</published>
+    <updated>2026-10-27T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.81.0</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.81.0"/>
+    <id>urn:uuid:8c20c3ba-9fa8-58a1-8c58-6d105cf61292</id>
+    <published>2026-10-26T15:17:00Z</published>
+    <updated>2026-10-26T15:17:00Z</updated>
+    <category term="minor"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.6</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.6"/>
+    <id>urn:uuid:f2f770d6-2abf-5213-829d-8134942e9eed</id>
+    <published>2026-10-25T15:17:00Z</published>
+    <updated>2026-10-25T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.5</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.5"/>
+    <id>urn:uuid:f0a6c0ee-20b6-5c35-ae83-069bab813e4f</id>
+    <published>2026-10-24T15:17:00Z</published>
+    <updated>2026-10-24T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.4</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.4"/>
+    <id>urn:uuid:5bae9c22-7f42-5649-ae9d-20e788871548</id>
+    <published>2026-10-23T15:17:00Z</published>
+    <updated>2026-10-23T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.3</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.3"/>
+    <id>urn:uuid:5ad21249-ce39-5ffc-a175-90f42a094eb4</id>
+    <published>2026-10-22T15:17:00Z</published>
+    <updated>2026-10-22T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.2</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.2"/>
+    <id>urn:uuid:925c4cf7-8599-530c-96ce-0b691bb352fd</id>
+    <published>2026-10-21T15:17:00Z</published>
+    <updated>2026-10-21T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.1</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.1"/>
+    <id>urn:uuid:5b6e9b6f-0c2d-5289-844f-d1f12ecbe3c1</id>
+    <published>2026-10-20T15:17:00Z</published>
+    <updated>2026-10-20T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.80.0</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.80.0"/>
+    <id>urn:uuid:b544069e-114f-5ce4-8603-e1226ed5ad6c</id>
+    <published>2026-10-19T15:17:00Z</published>
+    <updated>2026-10-19T15:17:00Z</updated>
+    <category term="minor"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.6</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.6"/>
+    <id>urn:uuid:3a804aa1-b620-53e1-b3e1-a2d7bbb28650</id>
+    <published>2026-10-18T15:17:00Z</published>
+    <updated>2026-10-18T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.5</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.5"/>
+    <id>urn:uuid:637e456b-0d81-509b-83c8-2846d13989be</id>
+    <published>2026-10-17T15:17:00Z</published>
+    <updated>2026-10-17T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.4</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.4"/>
+    <id>urn:uuid:dfdb41c7-6332-5b9f-b0cb-6a245b2367bc</id>
+    <published>2026-10-16T15:17:00Z</published>
+    <updated>2026-10-16T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.3</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.3"/>
+    <id>urn:uuid:9c09dfb9-4ea9-5ddb-933f-8dc35d9e7eb4</id>
+    <published>2026-10-15T15:17:00Z</published>
+    <updated>2026-10-15T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.2</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.2"/>
+    <id>urn:uuid:16bc6dd1-7a7c-548e-99d0-5cd68b79caa4</id>
+    <published>2026-10-14T15:17:00Z</published>
+    <updated>2026-10-14T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.1</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.1"/>
+    <id>urn:uuid:34a2b56d-0d34-5d6e-9776-cfc408df48d4</id>
+    <published>2026-10-13T15:17:00Z</published>
+    <updated>2026-10-13T15:17:00Z</updated>
+    <category term="patch"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+  <entry>
+    <title>v4.79.0</title>
+    <link rel="alternate" type="text/html" href="https://bugfixesandperformanceimprovements.com/changelog#v4.79.0"/>
+    <id>urn:uuid:02c44670-8bf8-54fd-ae31-7329491aa905</id>
+    <published>2026-10-12T15:17:00Z</published>
+    <updated>2026-10-12T15:17:00Z</updated>
+    <category term="minor"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;</content>
+  </entry>
+</feed>
