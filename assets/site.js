@@ -47,6 +47,17 @@ window.SITE = 'mergetel.github.io/bfpi';
           <p>BFPI is a parody. The companies, logos, people and quotes on it are made up. No changelog has ever been read.</p>
           <p><a href="${BASE}changelog.xml">Atom feed</a> · <a href="${BASE}pricing/">Pricing</a> · <a href="https://merge.tel">merge.tel</a></p>
         </div>
+        <!-- whois:start. The same block is on every mergetel satire site. See "The footer" in the README. -->
+        <section class="whois" aria-labelledby="whois-h">
+          <h2 id="whois-h">Who made this</h2>
+          <p>I'm John. I make software on my own, with more AI agents helping than is probably healthy. I did the enterprise job for twenty years and I'm unemployable now, so the real stuff below has to work.</p>
+          <ul>
+            <li><a href="https://johnf.build">johnf.build</a><span>what I'm building and how it's going</span></li>
+            <li><a href="https://merge.tel">merge.tel</a><span>turns merged pull requests into customer updates</span></li>
+            <li><a href="https://screenery.dev">Screenery</a><span>screenshots that update themselves on every release</span></li>
+          </ul>
+        </section>
+        <!-- whois:end -->
       </div>`;
   }
 

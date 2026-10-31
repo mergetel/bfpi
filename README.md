@@ -79,6 +79,14 @@ node scripts/release.mjs --kind=major        # force one
 
 Both write to the working tree, so reset afterwards if you only wanted a look.
 
+## The footer
+
+Every page ends with a "Who made this" block. It says who John is in a few lines and links to [johnf.build](https://johnf.build), [merge.tel](https://merge.tel) and [Screenery](https://screenery.dev), so anyone who lands on a joke site can find the real projects. The same block is on all four mergetel satire sites: [bfpi](https://github.com/mergetel/bfpi), [mmr](https://github.com/mergetel/mmr), [stinkslot](https://github.com/mergetel/stinkslot) and [gtmgen](https://github.com/mergetel/gtmgen). Each repo keeps its own copy, so no site depends on another one being up.
+
+The markup is in `assets/site.js`, which draws the footer on every page, 404 included. The CSS is in `assets/site.css`. Both sit between `whois:start` and `whois:end` comments. The block sets no colours of its own. It picks up the site's `--line` and `--muted` variables and its link colour, so it matches whichever palette it lands in.
+
+To change it, edit the block in all four repos and keep it identical, one PR per repo. The "Why this exists" text and the parody line above it belong to each site and don't change with it.
+
 ## Rules
 
 Everything on the site is made up, including the companies, logos, people and quotes. None of them is meant to be a real one. The share card carries a stamp and a "Parody. Not real release notes." strip inside the PNG, so a cropped screenshot still says it's a joke. Nothing on the site collects an email address.
