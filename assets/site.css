@@ -73,6 +73,15 @@ section.block.soft { background: var(--soft); border-top: 1px solid var(--line);
 .john p { margin: 0 0 12px; }
 .footbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding: 20px 0 32px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14px; }
 .footbar p { margin: 0; }
+/* whois:start. The same block is on every mergetel satire site. Colours come from the site's own variables. */
+.whois { margin: 12px 0 0; padding: 24px 0 40px; border-top: 1px solid var(--line, rgba(127, 127, 127, .3)); max-width: 680px; }
+.whois h2 { margin: 0 0 8px; font-size: 18px; line-height: 1.3; letter-spacing: 0; }
+.whois p { margin: 0 0 14px; }
+.whois ul { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.whois li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 12px; }
+.whois li a { min-width: 7em; font-weight: 600; }
+.whois li span { color: var(--muted, inherit); font-size: 14px; }
+/* whois:end */
 
 /* Modal */
 dialog { width: min(480px, calc(100vw - 32px)); padding: 0; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 30px 80px rgba(20, 20, 60, .3); }
