@@ -113,6 +113,12 @@
       "date": "2026-10-30",
       "kind": "patch",
       "notes": "Bug fixes and performance improvements."
+    },
+    {
+      "version": "4.81.5",
+      "date": "2026-10-31",
+      "kind": "patch",
+      "notes": "Bug fixes and performance improvements."
     }
   ]
 }
