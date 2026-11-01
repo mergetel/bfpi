@@ -119,6 +119,13 @@
       "date": "2026-10-31",
       "kind": "patch",
       "notes": "Bug fixes and performance improvements."
+    },
+    {
+      "version": "5.0.0",
+      "date": "2026-11-01",
+      "kind": "major",
+      "notes": "Bug fixes and performance improvements.",
+      "launchWeek": "launch-week/v5/"
     }
   ]
 }
