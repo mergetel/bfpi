@@ -5,9 +5,19 @@
   <link rel="self" type="application/atom+xml" href="https://mergetel.github.io/bfpi/changelog.xml"/>
   <link rel="alternate" type="text/html" href="https://mergetel.github.io/bfpi/changelog/"/>
   <id>urn:uuid:7fd9d054-5194-5c26-960c-3035b1fb2fc2</id>
-  <updated>2026-10-31T15:17:00Z</updated>
+  <updated>2026-11-01T15:17:00Z</updated>
   <author><name>BFPI</name><uri>https://mergetel.github.io/bfpi/</uri></author>
   <rights>Parody. Nothing in this feed describes a real change.</rights>
+  <entry>
+    <title>v5.0.0</title>
+    <link rel="alternate" type="text/html" href="https://mergetel.github.io/bfpi/launch-week/v5/"/>
+    <id>urn:uuid:500c7f7f-ef03-5d1a-b290-6e06f94bb150</id>
+    <published>2026-11-01T15:17:00Z</published>
+    <updated>2026-11-01T15:17:00Z</updated>
+    <category term="major"/>
+    <summary>Bug fixes and performance improvements.</summary>
+    <content type="html">&lt;p&gt;Bug fixes and performance improvements.&lt;/p&gt;&lt;p&gt;&lt;a href=&quot;https://mergetel.github.io/bfpi/launch-week/v5/&quot;&gt;Launch Week 5&lt;/a&gt;&lt;/p&gt;</content>
+  </entry>
   <entry>
     <title>v4.81.5</title>
     <link rel="alternate" type="text/html" href="https://mergetel.github.io/bfpi/changelog/#v4.81.5"/>
