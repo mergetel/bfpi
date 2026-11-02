@@ -126,6 +126,12 @@
       "kind": "major",
       "notes": "Bug fixes and performance improvements.",
       "launchWeek": "launch-week/v5/"
+    },
+    {
+      "version": "5.1.0",
+      "date": "2026-11-02",
+      "kind": "minor",
+      "notes": "Bug fixes and performance improvements."
     }
   ]
 }
