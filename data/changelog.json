@@ -210,6 +210,12 @@
       "date": "2026-11-15",
       "kind": "patch",
       "notes": "Bug fixes and performance improvements."
+    },
+    {
+      "version": "5.3.0",
+      "date": "2026-11-16",
+      "kind": "minor",
+      "notes": "Bug fixes and performance improvements."
     }
   ]
 }
