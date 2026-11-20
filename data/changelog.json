@@ -234,6 +234,12 @@
       "date": "2026-11-19",
       "kind": "patch",
       "notes": "Bug fixes and performance improvements."
+    },
+    {
+      "version": "5.3.4",
+      "date": "2026-11-20",
+      "kind": "patch",
+      "notes": "Bug fixes and performance improvements."
     }
   ]
 }
